@@ -1,14 +1,35 @@
-#!/bin/bash
-# .colori è il mio script shell contenente i codici per colorare la bash
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE:  ppt2pdf.sh
+# 
+#         USAGE:  ./ppt2pdf.sh 
+# 
+#   DESCRIPTION:  
+# 
+#       OPTIONS:  ---
+#  REQUIREMENTS:  JODConverter, OpenOffice
+#          BUGS:  ---
+#         NOTES:  ---
+#        AUTHOR: Mario Santagiuliana (MS), <mario at marionline.it>
+#       COMPANY: 
+#       CREATED: 19/12/2010 12:15:24 CET
+#      REVISION:  ---
+#	LICENSE: LGPL
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+# .colori is my shell script with color code for bash
 . colori
 
 echo -e "\n-----------------------------------------------------------------"
 echo -e "|   Avvio openoffice in modalità backgroud                      |"
-echo -e "|$RED   ooffice -headless -accept=\"socket,port=8100;urp;\" $Z          |"
+echo -e "|$RED soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard $Z          |"
 echo -e "-----------------------------------------------------------------\n"
-# con questo comando avvio openoffice come servizio in ascolto sulla porta 8100
-ooffice -headless -accept="socket,port=8100;urp;"&
-# mi salvo da parte il pid del processo così alla fine del lavoro lo uccido senza problemi
+# start OpenOffice as a service on listen port 8100
+soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard &
+# save pid of started process
 pidOO=$!
 # Chiedo se convertire tutti i file ora o se passarli uno ad uno
 echo -n -e "$GREEN Convertire tutti i file ppt della directory corrente?$Z [s/...]\n"
