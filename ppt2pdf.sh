@@ -7,8 +7,8 @@
 # 
 #   DESCRIPTION: convert ppt file to pdf 
 # 
-#       OPTIONS: -r -y -v -h
-#  REQUIREMENTS:  JODConverter, OpenOffice
+#       OPTIONS: -r -a -y -v -d -h
+#  REQUIREMENTS:  JODConverter, OpenOffice.org
 #          BUGS:  ---
 #         NOTES:  ---
 #        AUTHOR: Mario Santagiuliana (MS), <mario at marionline.it>
@@ -26,6 +26,7 @@ RECURSIVELY=false
 VERBOSITY=1
 ASK=true
 ALL_FILE_HERE=false
+INCLUDE_DOC=false
 
 usage(){
 cat<<EOF
@@ -35,6 +36,7 @@ Usage: ppt2pdf.sh [options] [filename]
     	     -a: All file in this directory,
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
+	     -d: Include doc file,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -94,7 +96,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryav:" Options
+while getopts ":hryadv:" Options
 do
     case $Options in 
         h ) usage
@@ -110,6 +112,7 @@ do
 		echo $"Invalid argument '$OPTARG' passed." >&2
             fi
             ;;
+	d ) INCLUDE_DOC=true;;
         : ) echo $"No argument passed to '$OPTARG' option." >&2 
 	    exit 1
 	    ;;
@@ -152,8 +155,22 @@ recursive(){
 		echo $"Exit from subdirectory: $DIR"
 	    fi
 	    cd ..
-	elif [[  ${FILE: -4} == ".ppt" ]]; then
-	    DEST_FILE=${FILE/%.ppt/.pdf}
+	else
+	    if [[ $INCLUDE_DOC == true ]]; then
+		if [[  ${FILE: -4} =~ .(ppt|doc) ]]; then
+		    GO=true
+		else
+		    GO=false
+		fi
+	    elif [[ ${FILE: -4} == ".ppt" ]]; then
+		GO=true
+	    else
+		GO=false
+	    fi 
+	fi
+	# Only if are correct extension go ahead
+	if [[ $GO == true ]]; then
+	    DEST_FILE=${FILE%.*}.pdf
 	    if [[ -f $DEST_FILE ]] ; then
 		file_size_diff
 		if [[ $VERBOSITY =~ [1-2] ]]; then
@@ -187,30 +204,46 @@ recursive(){
 		echo $"Saved: $SCARTO $UNIT"
 	    fi
 	    let TOT_DEST_FILE_SIZE="$TOT_DEST_FILE_SIZE + $DEST_FILE_SIZE"
-	    let TOT_PPT_SIZE="$TOT_PPT_SIZE + $FILE_SIZE"
+
+	    if [[ ${FILE: -4} == ".doc" ]]; then
+		let TOT_DOC_SIZE="$TOT_DOC_SIZE + $FILE_SIZE"
+	    else
+		let TOT_PPT_SIZE="$TOT_PPT_SIZE + $FILE_SIZE"
+	    fi
+
+	    # Reset access
+	    GO=false
 	fi
     done
 }
 
-if [[  ${FILE: -4} == ".ppt" ]]; then
-    DEST_FILE=${FILE/%.ppt/.pdf}
+if [[  ${FILE: -4} =~ .(ppt|doc) ]]; then
+    DEST_FILE=${FILE%.*}.pdf
     JOD_convert
+elif [[ ! -z $FILE ]]; then
+    echo $"$1 is not a ppt or doc file."
 fi
 
 if [[ $RECURSIVELY == true || $ALL_FILE_HERE == true ]]; then
     recursive
 fi
 
-if [[ $TOT_DEST_FILE_SIZE && $TOT_PPT_SIZE ]]; then
-    if [[ $VERBOSITY =~ [1-2] ]]; then
+if [[ $VERBOSITY =~ [1-2] ]]; then
+    echo
+    if [[ $TOT_PPT_SIZE ]]; then
 	TOT_PPT_SIZE=$(echo "scale=2; $TOT_PPT_SIZE/1048576" | bc)
-	echo
 	echo $"Total ppt files size: $TOT_PPT_SIZE MB"
+    fi
+    if [[ $TOT_DOC_SIZE ]]; then
+	TOT_DOC_SIZE=$(echo "scale=2; $TOT_DOC_SIZE/1048576" | bc)
+	echo $"Total doc files size: $TOT_DOC_SIZE MB"
+    fi
+    if [[ $TOT_DEST_FILE_SIZE ]]; then
 	TOT_DEST_FILE_SIZE=$(echo "scale=2; $TOT_DEST_FILE_SIZE/1048576" | bc)
 	echo $"Total pdf files size: $TOT_DEST_FILE_SIZE MB"
+    else
+	echo $"No file ppt or doc found or convert."
     fi
-else
-    echo $"No file ppt found."
 fi
 
 if [[ $VERBOSITY == 2 ]]; then
