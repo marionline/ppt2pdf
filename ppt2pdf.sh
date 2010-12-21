@@ -25,12 +25,14 @@ FILE=false
 RECURSIVELY=false
 VERBOSITY=1
 ASK=true
+ALL_FILE_HERE=false
 
 usage(){
 cat<<EOF
 
 Usage: ppt2pdf.sh [options] [filename]
     options: -r: Recursive,
+    	     -a: All file in this directory,
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
 	     -h: Usage.
@@ -92,7 +94,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryv:" Options
+while getopts ":hryav:" Options
 do
     case $Options in 
         h ) usage
@@ -100,6 +102,7 @@ do
 	    ;;
         r ) RECURSIVELY=true;;
 	y ) ASK=false;;
+	a ) ALL_FILE_HERE=true;;
         v ) if [[ $OPTARG =~ [0-2] ]]
 	    then
 		VERBOSITY=$OPTARG
@@ -119,6 +122,9 @@ shift $(($OPTIND - 1))
 
 if [ -f $1 ]; then
     FILE=$1
+else
+    echo $"$1 is not a file."
+    exit 1
 fi
 PASSED_FILE=$FILE
 
@@ -132,22 +138,18 @@ pidOO=$!
 # need a sleep to ensure that soffice complete the starting process
 sleep 2
 
-if [[  ${FILE: -4} == ".ppt" ]]; then
-    DEST_FILE=${FILE/%.ppt/.pdf}
-    JOD_convert
-fi
-
 recursive(){
     for FILE in *
     do
-	if [[ -d "$FILE" ]]; then
-	    cd $FILE
+	if [[ -d "$FILE" && $RECURSIVELY == true ]]; then
+	    local DIR=$FILE
+	    cd $DIR
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo $"Enter in subdirectory: $FILE"
+		echo $"Enter in subdirectory: $DIR"
 	    fi
 	    recursive
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo $"Exit from subdirectory."
+		echo $"Exit from subdirectory: $DIR"
 	    fi
 	    cd ..
 	elif [[  ${FILE: -4} == ".ppt" ]]; then
@@ -176,7 +178,7 @@ recursive(){
 		else
 		    CONTINUE=true
 		fi
-		if [[ $CONTINUE ]] ; then
+		if [[ $CONTINUE == true ]] ; then
 		    JOD_convert
 		    file_size_diff
 		fi
@@ -189,8 +191,17 @@ recursive(){
 	fi
     done
 }
-if [[ $RECURSIVELY ]]; then
+
+if [[  ${FILE: -4} == ".ppt" ]]; then
+    DEST_FILE=${FILE/%.ppt/.pdf}
+    JOD_convert
+fi
+
+if [[ $RECURSIVELY == true || $ALL_FILE_HERE == true ]]; then
     recursive
+fi
+
+if [[ $TOT_DEST_FILE_SIZE && $TOT_PPT_SIZE ]]; then
     if [[ $VERBOSITY =~ [1-2] ]]; then
 	TOT_PPT_SIZE=$(echo "scale=2; $TOT_PPT_SIZE/1048576" | bc)
 	echo
@@ -198,9 +209,11 @@ if [[ $RECURSIVELY ]]; then
 	TOT_DEST_FILE_SIZE=$(echo "scale=2; $TOT_DEST_FILE_SIZE/1048576" | bc)
 	echo $"Total pdf files size: $TOT_DEST_FILE_SIZE MB"
     fi
+else
+    echo $"No file ppt found."
 fi
 
-if [[ $VERBOSITY = 2 ]]; then
+if [[ $VERBOSITY == 2 ]]; then
     echo -e $"\nKill OpenOffice deamon...\n"
 fi
 # kill OpenOffice deamon

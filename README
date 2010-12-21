@@ -8,6 +8,18 @@ REQUIREMENTS
 * Java
 * Bash
 
+USAGE
+=====
+Usage: ppt2pdf.sh [options] [filename]
+    options: -r: Recursive,
+    	     -a: All file in this directory,
+    	     -y: Answare YES to all question,
+	     -v: Verbose (if not use default is 1),
+	     -h: Usage.
+    verbose: 0 no output,
+	     1 a little bit of info,
+	     2 a lot of info.
+
 LICENSE
 =======
 GPL v3.0
