@@ -1,3 +1,13 @@
-Convert ppt document to pdf document using jodconverter
+ABOUT
+=====
+Convert ppt document to pdf document using JODconverter and OpenOffice
 
-License LGPL
+REQUIREMENTS
+============
+* OpenOffice v2.0.3 or higher
+* Java
+* Bash
+
+LICENSE
+=======
+GPL v3.0
