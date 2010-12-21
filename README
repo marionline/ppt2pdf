@@ -1,11 +1,11 @@
 ABOUT
 =====
-Convert ppt document to pdf document using JODconverter and OpenOffice
+Convert ppt document to pdf document using JODconverter and OpenOffice.org
 
 REQUIREMENTS
 ============
-* OpenOffice v2.0.3 or higher
-* Java
+* OpenOffice.org v2.0.3 or higher
+* JODconverter
 * Bash
 
 USAGE
@@ -15,10 +15,18 @@ Usage: ppt2pdf.sh [options] [filename]
     	     -a: All file in this directory,
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
+	     -d: Include doc file,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
 	     2 a lot of info.
+
+TODO
+====
+* Add erase option for converted file
+* Add "ask question" if user want recreate an existing pdf
+* Complete lokalization of script
+* Improve inclusion of other type of file supported by OpenOffice.org
 
 LICENSE
 =======
