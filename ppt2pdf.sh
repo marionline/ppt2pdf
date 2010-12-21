@@ -5,9 +5,9 @@
 # 
 #         USAGE:  ./ppt2pdf.sh [options] [filename]
 # 
-#   DESCRIPTION:  
+#   DESCRIPTION: convert ppt file to pdf 
 # 
-#       OPTIONS: -r -v 
+#       OPTIONS: -r -y -v -h
 #  REQUIREMENTS:  JODConverter, OpenOffice
 #          BUGS:  ---
 #         NOTES:  ---
@@ -15,7 +15,7 @@
 #       COMPANY: 
 #       CREATED: 19/12/2010 12:15:24 CET
 #      REVISION:  ---
-#	LICENSE: LGPL
+#	LICENSE: GPL v3.0
 #===============================================================================
 
 # Set JODConverter PATH
