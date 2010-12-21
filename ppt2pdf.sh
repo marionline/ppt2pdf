@@ -14,7 +14,7 @@
 #        AUTHOR: Mario Santagiuliana (MS), <mario at marionline.it>
 #       COMPANY: 
 #       CREATED: 19/12/2010 12:15:24 CET
-#      REVISION:  ---
+#      REVISION: 21/12/2010 01:34:50 CET
 #	LICENSE: GPL v3.0
 #===============================================================================
 
@@ -72,7 +72,7 @@ JOD_convert(){
 	jod
     fi
     if [[ $VERBOSITY =~ [1-2] ]]; then
-	echo -e $"Conversion finished.\n"
+	echo $"Conversion finished."
 	echo $"Original file $FILE is $(ls -lh $FILE | awk '{ print $5 }') size"
 	echo $"Converted file $DEST_FILE is $(ls -lh $DEST_FILE | awk '{ print $5 }') size"
     fi
@@ -137,17 +137,26 @@ if [[  ${FILE: -4} == ".ppt" ]]; then
     JOD_convert
 fi
 
-if [[ $RECURSIVELY ]]; then
+recursive(){
     for FILE in *
     do
-	 if [[  ${FILE: -4} == ".ppt" ]]; then
+	if [[ -d "$FILE" ]]; then
+	    cd $FILE
+	    if [[ $VERBOSITY =~ [1-2] ]]; then
+		echo $"Enter in subdirectory: $FILE"
+	    fi
+	    recursive
+	    if [[ $VERBOSITY =~ [1-2] ]]; then
+		echo $"Exit from subdirectory."
+	    fi
+	    cd ..
+	elif [[  ${FILE: -4} == ".ppt" ]]; then
 	    DEST_FILE=${FILE/%.ppt/.pdf}
-	    CONTINUE=true
 	    if [[ -f $DEST_FILE ]] ; then
 		file_size_diff
 		if [[ $VERBOSITY =~ [1-2] ]]; then
 		    if [[ $FILE != $PASSED_FILE ]]; then
-			echo -e $"\nFile $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
+			echo $"File $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
 			echo $"Original file $FILE: Size is $FILE_SIZE_HUMAN"
 		    fi
 		fi
@@ -156,14 +165,16 @@ if [[ $RECURSIVELY ]]; then
 		#if [[ $answare = 'y' ]]; then
 		#fi
 	    else
-		if [[ $ASK ]]; then
-		    echo -e $"Convert: $FILE in pdf? [y/...]"
+		if [[ $ASK == true ]]; then
+		    echo $"Convert: $FILE in pdf? [y/...]"
 		    read -s -n1 answare
-		    if [[ $answare = 'y' ]]; then
+		    if [[ $answare == 'y' ]]; then
 			CONTINUE=true
 		    else
 			CONTINUE=false
 		    fi
+		else
+		    CONTINUE=true
 		fi
 		if [[ $CONTINUE ]] ; then
 		    JOD_convert
@@ -171,17 +182,21 @@ if [[ $RECURSIVELY ]]; then
 		fi
 	    fi
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo -e $"Saved: $SCARTO $UNIT \n"
+		echo $"Saved: $SCARTO $UNIT"
 	    fi
 	    let TOT_DEST_FILE_SIZE="$TOT_DEST_FILE_SIZE + $DEST_FILE_SIZE"
 	    let TOT_PPT_SIZE="$TOT_PPT_SIZE + $FILE_SIZE"
-	 fi
+	fi
     done
+}
+if [[ $RECURSIVELY ]]; then
+    recursive
     if [[ $VERBOSITY =~ [1-2] ]]; then
 	TOT_PPT_SIZE=$(echo "scale=2; $TOT_PPT_SIZE/1048576" | bc)
-	echo -e $"Total ppt files size: $TOT_PPT_SIZE MB"
+	echo
+	echo $"Total ppt files size: $TOT_PPT_SIZE MB"
 	TOT_DEST_FILE_SIZE=$(echo "scale=2; $TOT_DEST_FILE_SIZE/1048576" | bc)
-	echo -e $"Total pdf files size: $TOT_DEST_FILE_SIZE MB"
+	echo $"Total pdf files size: $TOT_DEST_FILE_SIZE MB"
     fi
 fi
 
