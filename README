@@ -16,6 +16,7 @@ Usage: ppt2pdf.sh [options] [filename]
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
+	     -e: Erase original file,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,

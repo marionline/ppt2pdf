@@ -27,6 +27,7 @@ VERBOSITY=1
 ASK=true
 ALL_FILE_HERE=false
 INCLUDE_DOC=false
+ERASE=false
 
 usage(){
 cat<<EOF
@@ -37,6 +38,7 @@ Usage: ppt2pdf.sh [options] [filename]
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
+	     -e: Erase original file,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -82,6 +84,14 @@ JOD_convert(){
     fi
 }
 
+erase(){
+    if [[ $ERASE == true ]]; then
+	if [[ $VERBOSITY =~ [1-2] ]]; then
+	    echo $"Erasing $FILE..."
+	fi
+	rm $FILE
+    fi
+}
 # If no parameter passed show usage options
 if [ $# -eq 0 ]
 then
@@ -96,7 +106,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryadv:" Options
+while getopts ":hryadev:" Options
 do
     case $Options in 
         h ) usage
@@ -105,6 +115,8 @@ do
         r ) RECURSIVELY=true;;
 	y ) ASK=false;;
 	a ) ALL_FILE_HERE=true;;
+	d ) INCLUDE_DOC=true;;
+	e ) ERASE=true;;
         v ) if [[ $OPTARG =~ [0-2] ]]
 	    then
 		VERBOSITY=$OPTARG
@@ -112,7 +124,6 @@ do
 		echo $"Invalid argument '$OPTARG' passed." >&2
             fi
             ;;
-	d ) INCLUDE_DOC=true;;
         : ) echo $"No argument passed to '$OPTARG' option." >&2 
 	    exit 1
 	    ;;
@@ -198,6 +209,7 @@ recursive(){
 		if [[ $CONTINUE == true ]] ; then
 		    JOD_convert
 		    file_size_diff
+		    erase
 		fi
 	    fi
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
@@ -220,6 +232,7 @@ recursive(){
 if [[  ${FILE: -4} =~ .(ppt|doc) ]]; then
     DEST_FILE=${FILE%.*}.pdf
     JOD_convert
+    erase
 elif [[ ! -z $FILE ]]; then
     echo $"$1 is not a ppt or doc file."
 fi
