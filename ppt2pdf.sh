@@ -22,7 +22,7 @@
 # Set JODConverter PATH
 JODConverter="/home/mario/jodconverter-2.2.2/lib/jodconverter-cli-2.2.2.jar"
 # Set TEXTDOMAINDIR, where are located translations
-TEXTDOMAINDIR=/home/mario/projects/ppt2pdf/locate
+TEXTDOMAINDIR=/home/mario/projects/ppt2pdf/locale
 
 
 #===============================================================================
