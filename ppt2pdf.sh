@@ -9,17 +9,25 @@
 # 
 #       OPTIONS: -r -a -y -v -d -h
 #  REQUIREMENTS:  JODConverter, OpenOffice.org
-#          BUGS:  ---
-#         NOTES:  ---
+#         NOTES: For bugs or other referer to:
+#			https://github.com/marionline/ppt2pdf
 #        AUTHOR: Mario Santagiuliana (MS), <mario at marionline.it>
-#       COMPANY: 
+#
 #       CREATED: 19/12/2010 12:15:24 CET
-#      REVISION: 21/12/2010 01:34:50 CET
+#      REVISION: 31/12/2010 16:38:50 CET
 #	LICENSE: GPL v3.0
+#
 #===============================================================================
 
 # Set JODConverter PATH
 JODConverter="/home/mario/jodconverter-2.2.2/lib/jodconverter-cli-2.2.2.jar"
+# Set TEXTDOMAINDIR, where are located translations
+TEXTDOMAINDIR=/home/mario/projects/ppt2pdf/locate
+
+
+#===============================================================================
+# Should not to be changed
+#===============================================================================
 
 FILE=false
 RECURSIVELY=false
@@ -29,9 +37,14 @@ ALL_FILE_HERE=false
 INCLUDE_DOC=false
 ERASE=false
 
-usage(){
-cat<<EOF
+TEXTDOMAIN=ppt2pdf
 
+export TEXTDOMAINDIR
+export TEXTDOMAIN
+
+. gettext.sh
+
+USAGE=`gettext "
 Usage: ppt2pdf.sh [options] [filename]
     options: -r: Recursive,
     	     -a: All file in this directory,
@@ -44,6 +57,10 @@ Usage: ppt2pdf.sh [options] [filename]
 	     1 a little bit of info,
 	     2 a lot of info.
 
+"`
+usage(){
+cat<<EOF
+$USAGE
 EOF
 }
 
@@ -70,7 +87,8 @@ jod(){
 
 JOD_convert(){
     if [[ $VERBOSITY =~ [1-2] ]]; then
-	echo $"Conversion of $FILE $(ls -lh $FILE | awk '{ print $5 }')..."
+	DIM=`ls -lh $FILE | awk '{ print $5 }'`
+	echo "`eval_gettext "Conversion of \\$FILE \\$DIM..."`"
     fi
     if [[ $VERBOSITY =~ [0-1] ]]; then
 	jod &> /dev/null
@@ -78,16 +96,18 @@ JOD_convert(){
 	jod
     fi
     if [[ $VERBOSITY =~ [1-2] ]]; then
-	echo $"Conversion finished."
-	echo $"Original file $FILE is $(ls -lh $FILE | awk '{ print $5 }') size"
-	echo $"Converted file $DEST_FILE is $(ls -lh $DEST_FILE | awk '{ print $5 }') size"
+	echo "`eval_gettext "Conversion finished."`"
+	DIM=`ls -lh $FILE | awk '{ print $5 }'`
+	echo "`eval_gettext "Original file \\$FILE is \\$DIM size"`"
+	DEST_DIM=`ls -lh $DEST_FILE | awk '{ print $5 }'`
+	echo "`eval_gettext "Converted file \\$DEST_FILE is \\$DEST_DIM size"`"
     fi
 }
 
 erase(){
     if [[ $ERASE == true ]]; then
 	if [[ $VERBOSITY =~ [1-2] ]]; then
-	    echo $"Erasing $FILE..."
+	    echo "`eval_gettext "Erasing \\$FILE..."`"
 	fi
 	rm $FILE
     fi
@@ -95,14 +115,14 @@ erase(){
 # If no parameter passed show usage options
 if [ $# -eq 0 ]
 then
-    echo $"No argument passed."
+    echo "`eval_gettext "No argument passed."`"
     usage
     exit 1
 fi
 
 # If not found JODConverter
 if [ ! -r "$JODConverter" ]; then
-  echo $"ERROR: JODConverter not found." >&2
+  echo "`eval_gettext "ERROR: JODConverter not found."`" >&2
   exit 1
 fi
 
@@ -121,13 +141,13 @@ do
 	    then
 		VERBOSITY=$OPTARG
             else
-		echo $"Invalid argument '$OPTARG' passed." >&2
+		echo "`eval_gettext "Invalid argument '\\$OPTARG' passed."`" >&2
             fi
             ;;
-        : ) echo $"No argument passed to '$OPTARG' option." >&2 
+        : ) echo "`eval_gettext "No argument passed to '\\$OPTARG' option."`" >&2 
 	    exit 1
 	    ;;
-        * ) echo $"Invalid option '-$OPTARG'." >&2
+        * ) echo "`eval_gettext "Invalid option '-\\$OPTARG'."`" >&2
 	    exit 1
 	    ;; # DEFAULT
     esac
@@ -137,13 +157,13 @@ shift $(($OPTIND - 1))
 if [ -f $1 ]; then
     FILE=$1
 else
-    echo $"$1 is not a file."
+    echo "`eval_gettext "\\$1 is not a file."`"
     exit 1
 fi
 PASSED_FILE=$FILE
 
 if [[ $VERBOSITY = 2 ]]; then
-    echo -e $"\nStarting OpenOffice as a deamon...\n"
+    echo -e "`gettext "\nStarting OpenOffice as a deamon...\n"`"
 fi
 # start OpenOffice as a service on listen port 8100
 soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard &
@@ -159,11 +179,11 @@ recursive(){
 	    local DIR=$FILE
 	    cd $DIR
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo $"Enter in subdirectory: $DIR"
+		echo "`eval_gettext "Enter in subdirectory: \\$DIR"`"
 	    fi
 	    recursive
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo $"Exit from subdirectory: $DIR"
+		echo "`eval_gettext "Exit from subdirectory: \\$DIR"`"
 	    fi
 	    cd ..
 	else
@@ -186,17 +206,17 @@ recursive(){
 		file_size_diff
 		if [[ $VERBOSITY =~ [1-2] ]]; then
 		    if [[ $FILE != $PASSED_FILE ]]; then
-			echo $"File $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
-			echo $"Original file $FILE: Size is $FILE_SIZE_HUMAN"
+			echo "`eval_gettext "File \\$DEST_FILE exist: Size is \\$DEST_FILE_SIZE_HUMAN"`"
+			echo "`eval_gettext "Original file \\$FILE: Size is \\$FILE_SIZE_HUMAN"`"
 		    fi
 		fi
-		#echo $"Would you like overwrite it? [y/...]"
+		#echo "`eval_gettext "Would you like overwrite it?  [y/...]"`"
 		#read -s -n1 answare
 		#if [[ $answare = 'y' ]]; then
 		#fi
 	    else
 		if [[ $ASK == true ]]; then
-		    echo $"Convert: $FILE in pdf? [y/...]"
+		    echo "`eval_gettext "Convert: \\$FILE in pdf? [y/...]"`"
 		    read -s -n1 answare
 		    if [[ $answare == 'y' ]]; then
 			CONTINUE=true
@@ -213,7 +233,7 @@ recursive(){
 		fi
 	    fi
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
-		echo $"Saved: $SCARTO $UNIT"
+		echo "`eval_gettext "Saved: \\$SCARTO \\$UNIT"`"
 	    fi
 	    let TOT_DEST_FILE_SIZE="$TOT_DEST_FILE_SIZE + $DEST_FILE_SIZE"
 
@@ -234,7 +254,7 @@ if [[  ${FILE: -4} =~ .(ppt|doc) ]]; then
     JOD_convert
     erase
 elif [[ ! -z $FILE ]]; then
-    echo $"$1 is not a ppt or doc file."
+    echo "`eval_gettext "\\$1 is not a ppt or doc file."`"
 fi
 
 if [[ $RECURSIVELY == true || $ALL_FILE_HERE == true ]]; then
@@ -245,22 +265,22 @@ if [[ $VERBOSITY =~ [1-2] ]]; then
     echo
     if [[ $TOT_PPT_SIZE ]]; then
 	TOT_PPT_SIZE=$(echo "scale=2; $TOT_PPT_SIZE/1048576" | bc)
-	echo $"Total ppt files size: $TOT_PPT_SIZE MB"
+	echo "`eval_gettext "Total ppt files size: \\$TOT_PPT_SIZE MB"`"
     fi
     if [[ $TOT_DOC_SIZE ]]; then
 	TOT_DOC_SIZE=$(echo "scale=2; $TOT_DOC_SIZE/1048576" | bc)
-	echo $"Total doc files size: $TOT_DOC_SIZE MB"
+	echo "`eval_gettext "Total doc files size: \\$TOT_DOC_SIZE MB"`"
     fi
     if [[ $TOT_DEST_FILE_SIZE ]]; then
 	TOT_DEST_FILE_SIZE=$(echo "scale=2; $TOT_DEST_FILE_SIZE/1048576" | bc)
-	echo $"Total pdf files size: $TOT_DEST_FILE_SIZE MB"
+	echo "`eval_gettext "Total pdf files size: \\$TOT_DEST_FILE_SIZE MB"`"
     else
-	echo $"No file ppt or doc found or convert."
+	echo "`eval_gettext "No file ppt or doc found or convert."`"
     fi
 fi
 
 if [[ $VERBOSITY == 2 ]]; then
-    echo -e $"\nKill OpenOffice deamon...\n"
+    echo -e "`eval_gettext "\nKill OpenOffice deamon...\n"`"
 fi
 # kill OpenOffice deamon
 kill $pidOO 2>/dev/null

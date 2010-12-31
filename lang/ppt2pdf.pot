@@ -1,0 +1,152 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-12-31 16:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ppt2pdf.sh:47
+msgid ""
+"\n"
+"Usage: ppt2pdf.sh [options] [filename]\n"
+"    options: -r: Recursive,\n"
+"    \t     -a: All file in this directory,\n"
+"    \t     -y: Answare YES to all question,\n"
+"\t     -v: Verbose (if not use default is 1),\n"
+"\t     -d: Include doc file,\n"
+"\t     -e: Erase original file,\n"
+"\t     -h: Usage.\n"
+"    verbose: 0 no output,\n"
+"\t     1 a little bit of info,\n"
+"\t     2 a lot of info.\n"
+"\n"
+msgstr ""
+
+#: ppt2pdf.sh:91
+#, sh-format
+msgid "Conversion of $FILE $DIM..."
+msgstr ""
+
+#: ppt2pdf.sh:99
+#, sh-format
+msgid "Conversion finished."
+msgstr ""
+
+#: ppt2pdf.sh:101
+#, sh-format
+msgid "Original file $FILE is $DIM size"
+msgstr ""
+
+#: ppt2pdf.sh:103
+#, sh-format
+msgid "Converted file $DEST_FILE is $DEST_DIM size"
+msgstr ""
+
+#: ppt2pdf.sh:110
+#, sh-format
+msgid "Erasing $FILE..."
+msgstr ""
+
+#: ppt2pdf.sh:118
+#, sh-format
+msgid "No argument passed."
+msgstr ""
+
+#: ppt2pdf.sh:125
+#, sh-format
+msgid "ERROR: JODConverter not found."
+msgstr ""
+
+#: ppt2pdf.sh:144
+#, sh-format
+msgid "Invalid argument '$OPTARG' passed."
+msgstr ""
+
+#: ppt2pdf.sh:147
+#, sh-format
+msgid "No argument passed to '$OPTARG' option."
+msgstr ""
+
+#: ppt2pdf.sh:150
+#, sh-format
+msgid "Invalid option '-$OPTARG'."
+msgstr ""
+
+#: ppt2pdf.sh:160
+msgid "$1 is not a file."
+msgstr ""
+
+#: ppt2pdf.sh:166
+msgid "\\nStarting OpenOffice as a deamon...\\n"
+msgstr ""
+
+#: ppt2pdf.sh:182
+#, sh-format
+msgid "Enter in subdirectory: $DIR"
+msgstr ""
+
+#: ppt2pdf.sh:186
+#, sh-format
+msgid "Exit from subdirectory: $DIR"
+msgstr ""
+
+#: ppt2pdf.sh:209
+#, sh-format
+msgid "File $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
+msgstr ""
+
+#: ppt2pdf.sh:210
+#, sh-format
+msgid "Original file $FILE: Size is $FILE_SIZE_HUMAN"
+msgstr ""
+
+#: ppt2pdf.sh:219
+#, sh-format
+msgid "Convert: $FILE in pdf? [y/...]"
+msgstr ""
+
+#: ppt2pdf.sh:236
+#, sh-format
+msgid "Saved: $SCARTO $UNIT"
+msgstr ""
+
+#: ppt2pdf.sh:257
+msgid "$1 is not a ppt or doc file."
+msgstr ""
+
+#: ppt2pdf.sh:268
+#, sh-format
+msgid "Total ppt files size: $TOT_PPT_SIZE MB"
+msgstr ""
+
+#: ppt2pdf.sh:272
+#, sh-format
+msgid "Total doc files size: $TOT_DOC_SIZE MB"
+msgstr ""
+
+#: ppt2pdf.sh:276
+#, sh-format
+msgid "Total pdf files size: $TOT_DEST_FILE_SIZE MB"
+msgstr ""
+
+#: ppt2pdf.sh:278
+#, sh-format
+msgid "No file ppt or doc found or convert."
+msgstr ""
+
+#: ppt2pdf.sh:283
+#, sh-format
+msgid "\\nKill OpenOffice deamon...\\n"
+msgstr ""
