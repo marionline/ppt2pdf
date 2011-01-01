@@ -27,7 +27,6 @@ TODO
 ====
 * Add "ask question" if user want recreate an existing pdf
 * Add question if erase or not the original file
-* Complete lokalization of script
 * Improve inclusion of other type of file supported by OpenOffice.org
 * Add pdf options (example: jpeg compression)
 
