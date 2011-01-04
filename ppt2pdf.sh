@@ -36,6 +36,7 @@ ASK=true
 ALL_FILE_HERE=false
 INCLUDE_DOC=false
 ERASE=false
+ASK_ERASING=false
 
 TEXTDOMAIN=ppt2pdf
 
@@ -52,6 +53,7 @@ Usage: ppt2pdf.sh [options] [filename]
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
 	     -e: Erase original file,
+	     -q: Ask before erasing,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -106,10 +108,24 @@ JOD_convert(){
 
 erase(){
     if [[ $ERASE == true ]]; then
-	if [[ $VERBOSITY =~ [1-2] ]]; then
-	    echo "`eval_gettext "Erasing \\$FILE..."`"
+	CONTINUE=false
+	if [[ $ASK_ERASING == true && $ASK == true ]]; then
+	    echo "`eval_gettext "Do you want erase \\$FILE?[y/...]"`"
+	    read -s -n1 answare
+	    if [[ $answare == 'y' ]]; then
+		CONTINUE=true
+	    else
+		CONTINUE=false
+	    fi
+	else
+	    CONTINUE=true
 	fi
-	rm $FILE
+	if [[ $CONTINUE == true ]]; then
+	    if [[ $VERBOSITY =~ [1-2] ]]; then
+		echo "`eval_gettext "Erasing \\$FILE..."`"
+	    fi
+	    rm $FILE
+	fi
     fi
 }
 # If no parameter passed show usage options
@@ -126,7 +142,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryadev:" Options
+while getopts ":hryadeqv:" Options
 do
     case $Options in 
         h ) usage
@@ -137,6 +153,7 @@ do
 	a ) ALL_FILE_HERE=true;;
 	d ) INCLUDE_DOC=true;;
 	e ) ERASE=true;;
+	q ) ASK_ERASING=true;;
         v ) if [[ $OPTARG =~ [0-2] ]]
 	    then
 		VERBOSITY=$OPTARG

@@ -18,6 +18,7 @@ Usage: ppt2pdf.sh [options] [filename]
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
 	     -e: Erase original file,
+	     -q: Ask before erasing,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -25,8 +26,8 @@ Usage: ppt2pdf.sh [options] [filename]
 
 TODO
 ====
+* Update pot file and translation
 * Add "ask question" if user want recreate an existing pdf
-* Add question if erase or not the original file
 * Improve inclusion of other type of file supported by OpenOffice.org
 * Add pdf options (example: jpeg compression)
 
