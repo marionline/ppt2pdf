@@ -32,6 +32,7 @@ TEXTDOMAINDIR=/home/mario/projects/ppt2pdf/locale
 FILE=false
 RECURSIVELY=false
 VERBOSITY=1
+OVERWRITE=false
 ASK=true
 ALL_FILE_HERE=false
 INCLUDE_DOC=false
@@ -49,6 +50,7 @@ USAGE=`gettext "
 Usage: ppt2pdf.sh [options] [filename]
     options: -r: Recursive,
     	     -a: All file in this directory,
+	     -o: Overwrite existing destination file,
     	     -y: Answare YES to all question,
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
@@ -142,7 +144,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryadeqv:" Options
+while getopts ":hryaodeqv:" Options
 do
     case $Options in 
         h ) usage
@@ -151,6 +153,7 @@ do
         r ) RECURSIVELY=true;;
 	y ) ASK=false;;
 	a ) ALL_FILE_HERE=true;;
+	o ) OVERWRITE=true;;
 	d ) INCLUDE_DOC=true;;
 	e ) ERASE=true;;
 	q ) ASK_ERASING=true;;
@@ -227,10 +230,17 @@ recursive(){
 			echo "`eval_gettext "Original file \\$FILE: Size is \\$FILE_SIZE_HUMAN"`"
 		    fi
 		fi
-		#echo "`eval_gettext "Would you like overwrite it?  [y/...]"`"
-		#read -s -n1 answare
-		#if [[ $answare = 'y' ]]; then
-		#fi
+		if [[ $ASK == true && $OVERWRITE == false ]]; then
+		    echo "`eval_gettext "Would you like overwrite $DEST_FILE?  [y/...]"`"
+		    read -s -n1 answare
+		    if [[ $answare = 'y' ]]; then
+			CONTINUE=true
+		    else
+			CONTINUE=false
+		    fi
+		elif [[ $OVERWRITE == true || $ASK == false ]]; then
+		    CONTINUE=true
+		fi
 	    else
 		if [[ $ASK == true ]]; then
 		    echo "`eval_gettext "Convert: \\$FILE in pdf? [y/...]"`"
@@ -243,11 +253,12 @@ recursive(){
 		else
 		    CONTINUE=true
 		fi
-		if [[ $CONTINUE == true ]] ; then
-		    JOD_convert
-		    file_size_diff
-		    erase
-		fi
+	    fi
+	    # If user say continue: convert file
+	    if [[ $CONTINUE == true ]] ; then
+		JOD_convert
+		file_size_diff
+		erase
 	    fi
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
 		echo "`eval_gettext "Saved: \\$SCARTO \\$UNIT"`"
