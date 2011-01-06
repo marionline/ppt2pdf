@@ -55,7 +55,7 @@ Usage: ppt2pdf.sh [options] [filename]
 	     -v: Verbose (if not use default is 1),
 	     -d: Include doc file,
 	     -e: Erase original file,
-	     -b: Ask before erasing,
+	     -q: Ask before erasing,
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -144,7 +144,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryaodebv:" Options
+while getopts ":hryaodeqv:" Options
 do
     case $Options in 
         h ) usage
@@ -156,7 +156,7 @@ do
 	o ) OVERWRITE=true;;
 	d ) INCLUDE_DOC=true;;
 	e ) ERASE=true;;
-	b ) ASK_ERASING=true;;
+	q ) ASK_ERASING=true;;
         v ) if [[ $OPTARG =~ [0-2] ]]
 	    then
 		VERBOSITY=$OPTARG
