@@ -21,6 +21,7 @@
 
 # Set JODConverter PATH
 JODConverter="/home/mario/jodconverter-2.2.2/lib/jodconverter-cli-2.2.2.jar"
+JODConverterXML="/home/mario/jodconverter-2.2.2/document-formats.xml"
 # Set TEXTDOMAINDIR, where are located translations
 TEXTDOMAINDIR=/home/mario/projects/ppt2pdf/locale
 
@@ -38,6 +39,7 @@ ALL_FILE_HERE=false
 INCLUDE_DOC=false
 ERASE=false
 ASK_ERASING=false
+JPEG_QUALITY=90
 
 TEXTDOMAIN=ppt2pdf
 
@@ -47,7 +49,7 @@ export TEXTDOMAIN
 . gettext.sh
 
 USAGE=`gettext "
-Usage: ppt2pdf.sh [options] [filename]
+Usage: ppt2pdf.sh [options[argument]] [filename]
     options: -r: Recursive,
     	     -a: All file in this directory,
 	     -o: Overwrite existing destination file,
@@ -56,6 +58,7 @@ Usage: ppt2pdf.sh [options] [filename]
 	     -d: Include doc file,
 	     -e: Erase original file,
 	     -q: Ask before erasing,
+	     -j: JPEG quality (provides number 0 - 100, default 90),
 	     -h: Usage.
     verbose: 0 no output,
 	     1 a little bit of info,
@@ -86,7 +89,7 @@ file_size_diff(){
 }
 
 jod(){
-    java -jar $JODConverter $FILE $DEST_FILE
+    java -jar $JODConverter $V --xml-registry $JODConverterXML $FILE $DEST_FILE
 }
 
 JOD_convert(){
@@ -95,8 +98,10 @@ JOD_convert(){
 	echo "`eval_gettext "Conversion of \\$FILE \\$DIM..."`"
     fi
     if [[ $VERBOSITY =~ [0-1] ]]; then
+	V=""
 	jod &> /dev/null
     else
+	V="-v"
 	jod
     fi
     if [[ $VERBOSITY =~ [1-2] ]]; then
@@ -144,7 +149,7 @@ if [ ! -r "$JODConverter" ]; then
   exit 1
 fi
 
-while getopts ":hryaodeqv:" Options
+while getopts ":hryaodeqj:v:" Options
 do
     case $Options in 
         h ) usage
@@ -157,8 +162,28 @@ do
 	d ) INCLUDE_DOC=true;;
 	e ) ERASE=true;;
 	q ) ASK_ERASING=true;;
-        v ) if [[ $OPTARG =~ [0-2] ]]
-	    then
+	j ) if [[ $OPTARG =~ [0-9] ]]; then
+	        if [[ ! -a "$JODConverterXML.backup" ]]; then
+		    cp $JODConverterXML $JODConverterXML.backup
+		fi
+		# Add JPEG quality export option
+		sed "/<string>\(impress\|writer\)\+_pdf_Export<\/string>/{n;
+		s@<\/entry>@\</entry>\n\
+	  <entry>\n\
+	    <string>FilterData</string>\n\
+	    <map>\n\
+	      <entry>\n\
+		<string>Quality</string>\n\
+		<int>$OPTARG</int>\n\
+	      </entry>\n\
+	    </map>\n\
+	  </entry>\
+	        @} " $JODConverterXML.backup > $JODConverterXML
+	    else
+		echo  "`eval_gettext "Invalid argument '\\$OPTARG' passed."`" >&2
+	    fi
+	    ;;
+        v ) if [[ $OPTARG =~ [0-2] ]]; then
 		VERBOSITY=$OPTARG
             else
 		echo "`eval_gettext "Invalid argument '\\$OPTARG' passed."`" >&2
@@ -191,6 +216,16 @@ soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwi
 pidOO=$!
 # need a sleep to ensure that soffice complete the starting process
 sleep 2
+
+tot_size(){
+    let TOT_DEST_FILE_SIZE="$TOT_DEST_FILE_SIZE + $DEST_FILE_SIZE"
+
+    if [[ ${FILE: -4} == ".doc" ]]; then
+	let TOT_DOC_SIZE="$TOT_DOC_SIZE + $FILE_SIZE"
+    else
+	let TOT_PPT_SIZE="$TOT_PPT_SIZE + $FILE_SIZE"
+    fi
+}
 
 recursive(){
     for FILE in *
@@ -263,13 +298,8 @@ recursive(){
 	    if [[ $VERBOSITY =~ [1-2] ]]; then
 		echo "`eval_gettext "Saved: \\$SCARTO \\$UNIT"`"
 	    fi
-	    let TOT_DEST_FILE_SIZE="$TOT_DEST_FILE_SIZE + $DEST_FILE_SIZE"
-
-	    if [[ ${FILE: -4} == ".doc" ]]; then
-		let TOT_DOC_SIZE="$TOT_DOC_SIZE + $FILE_SIZE"
-	    else
-		let TOT_PPT_SIZE="$TOT_PPT_SIZE + $FILE_SIZE"
-	    fi
+	    # Calc the total file size
+	    tot_size
 
 	    # Reset access
 	    GO=false
@@ -280,6 +310,8 @@ recursive(){
 if [[  ${FILE: -4} =~ .(ppt|doc) ]]; then
     DEST_FILE=${FILE%.*}.pdf
     JOD_convert
+    file_size_diff
+    tot_size
     erase
 elif [[ ! -z $FILE ]]; then
     echo "`eval_gettext "\\$1 is not a ppt or doc file."`"

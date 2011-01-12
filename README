@@ -5,7 +5,7 @@ Convert ppt document to pdf document using JODconverter and OpenOffice.org
 REQUIREMENTS
 ============
 * OpenOffice.org v2.0.3 or higher
-* JODconverter
+* JODconverter (2.1.0 to have JPEG quality option)
 * Bash
 * Gettext
 
