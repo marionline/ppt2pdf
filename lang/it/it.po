@@ -1,13 +1,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Mario Santagiuliana <fedora at marionline.it>, 2010.
+# Mario Santagiuliana <fedora at marionline.it>, 2010, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-31 16:39+0100\n"
-"PO-Revision-Date: 2010-12-31 16:54+0100\n"
+"POT-Creation-Date: 2011-01-12 22:13+0100\n"
+"PO-Revision-Date: 2011-01-12 22:27+0100\n"
 "Last-Translator: Mario Santagiuliana <fedora at marionline.it>\n"
 "Language-Team: Italian <fedora-trans-it at redhat.com>\n"
 "Language: \n"
@@ -17,16 +17,19 @@ msgstr ""
 "X-Generator: Lokalize 1.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ppt2pdf.sh:47
+#: ppt2pdf.sh:51
 msgid ""
 "\n"
-"Usage: ppt2pdf.sh [options] [filename]\n"
+"Usage: ppt2pdf.sh [options[argument]] [filename]\n"
 "    options: -r: Recursive,\n"
 "    \t     -a: All file in this directory,\n"
+"\t     -o: Overwrite existing destination file,\n"
 "    \t     -y: Answare YES to all question,\n"
 "\t     -v: Verbose (if not use default is 1),\n"
 "\t     -d: Include doc file,\n"
 "\t     -e: Erase original file,\n"
+"\t     -q: Ask before erasing,\n"
+"\t     -j: JPEG quality (provides number 0 - 100, default 90),\n"
 "\t     -h: Usage.\n"
 "    verbose: 0 no output,\n"
 "\t     1 a little bit of info,\n"
@@ -37,129 +40,137 @@ msgstr ""
 "Uso: ppt2pdf.sh [opzioni] [nome file]\n"
 "    opzioni: -r: Ricorsivo,\n"
 "    \t     -a: Tutti i file nella directory,\n"
+"\t     -o: Sovrascrivi file di destinazione se esiste,\n"
 "    \t     -y: Rispondi YES a tutte le domande,\n"
 "\t     -v: Verboso (se non usato di default è 1),\n"
 "\t     -d: Includere file doc,\n"
 "\t     -e: Eliminare file originale,\n"
+"\t     -q: Chiedi prima di cancellare,\n"
+"\t     -j: Qualità JPEG (fornire un numero 0 - 100, default 90),\n"
 "\t     -h: Uso.\n"
 "    verboso: 0 no output,\n"
 "\t     1 un po' di informazioni,\n"
 "\t     2 un po' più informazioni.\n"
 "\n"
 
-#: ppt2pdf.sh:91
+#: ppt2pdf.sh:98
 #, sh-format
 msgid "Conversion of $FILE $DIM..."
 msgstr "Conversione di $FILE $DIM..."
 
-#: ppt2pdf.sh:99
+#: ppt2pdf.sh:108
 #, sh-format
 msgid "Conversion finished."
 msgstr "Conversione finita."
 
-#: ppt2pdf.sh:101
-#, sh-format
-msgid "Original file $FILE is $DIM size"
-msgstr "File originale $FILE è di dimensione $DIM$DIM dimensisiz"
-
-#: ppt2pdf.sh:103
-#, sh-format
-msgid "Converted file $DEST_FILE is $DEST_DIM size"
-msgstr "File convertito $DEST_FILE è di dimensione $DEST_DIM siz"
-
 #: ppt2pdf.sh:110
 #, sh-format
-msgid "Erasing $FILE..."
-msgstr "Eliminazione $FILE"
+msgid "Original file $FILE is $DIM size"
+msgstr "File originale $FILE è di dimensione $DIM"
 
-#: ppt2pdf.sh:118
+#: ppt2pdf.sh:112
+#, sh-format
+msgid "Converted file $DEST_FILE is $DEST_DIM size"
+msgstr "File convertito $DEST_FILE è di dimensione $DEST_DIM"
+
+#: ppt2pdf.sh:120
+#, sh-format
+msgid "Do you want erase $FILE?[y/...]"
+msgstr "Vuoi eliminare $FILE?[y/...]"
+
+#: ppt2pdf.sh:132
+#, sh-format
+msgid "Erasing $FILE..."
+msgstr "Eliminazione $FILE..."
+
+#: ppt2pdf.sh:141
 #, sh-format
 msgid "No argument passed."
 msgstr "Nessun argomento passato."
 
-#: ppt2pdf.sh:125
+#: ppt2pdf.sh:148
 #, sh-format
 msgid "ERROR: JODConverter not found."
 msgstr "ERRORE: JODConverter non trovato."
 
-#: ppt2pdf.sh:144
+#: ppt2pdf.sh:183 ppt2pdf.sh:189
 #, sh-format
 msgid "Invalid argument '$OPTARG' passed."
 msgstr "Passato argomento '$OPTARG' non valido."
 
-#: ppt2pdf.sh:147
+#: ppt2pdf.sh:192
 #, sh-format
 msgid "No argument passed to '$OPTARG' option."
 msgstr "Nessun argomento passato all'opzione '$OPTARG'."
 
-#: ppt2pdf.sh:150
+#: ppt2pdf.sh:195
 #, sh-format
 msgid "Invalid option '-$OPTARG'."
 msgstr "Opzione '-$OPTARG' non valida."
 
-#: ppt2pdf.sh:160
+#: ppt2pdf.sh:205
 msgid "$1 is not a file."
 msgstr "$1 non è un file."
 
-#: ppt2pdf.sh:166
+#: ppt2pdf.sh:211
 msgid "\\nStarting OpenOffice as a deamon...\\n"
 msgstr "\\nAvvio OpenOffice come demone...\\n"
 
-#: ppt2pdf.sh:182
+#: ppt2pdf.sh:237
 #, sh-format
 msgid "Enter in subdirectory: $DIR"
 msgstr "Entro nella subdirectory: $DIR"
 
-#: ppt2pdf.sh:186
+#: ppt2pdf.sh:241
 #, sh-format
 msgid "Exit from subdirectory: $DIR"
 msgstr "Esco dalla subdirectory: $DIR"
 
-#: ppt2pdf.sh:209
+#: ppt2pdf.sh:264
 #, sh-format
 msgid "File $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
 msgstr "File $DEST_FILE esiste: dimensione di $DEST_FILE_SIZE_HUMAN"
 
-#: ppt2pdf.sh:210
+#: ppt2pdf.sh:265
 #, sh-format
 msgid "Original file $FILE: Size is $FILE_SIZE_HUMAN"
 msgstr "File originale $FILE: dimensione di $FILE_SIZE_HUMAN"
 
-#: ppt2pdf.sh:219
+#: ppt2pdf.sh:281
 #, sh-format
 msgid "Convert: $FILE in pdf? [y/...]"
 msgstr "Convertire: $FILE in pdf? [y/...]"
 
-#: ppt2pdf.sh:236
+#: ppt2pdf.sh:299
 #, sh-format
 msgid "Saved: $SCARTO $UNIT"
 msgstr "Risparmiato: $SCARTO $UNIT"
 
-#: ppt2pdf.sh:257
+#: ppt2pdf.sh:317
 msgid "$1 is not a ppt or doc file."
 msgstr "$1 non è un file ppt o doc."
 
-#: ppt2pdf.sh:268
+#: ppt2pdf.sh:328
 #, sh-format
 msgid "Total ppt files size: $TOT_PPT_SIZE MB"
 msgstr "Dimensione totale file ppt: $TOT_PPT_SIZE MB"
 
-#: ppt2pdf.sh:272
+#: ppt2pdf.sh:332
 #, sh-format
 msgid "Total doc files size: $TOT_DOC_SIZE MB"
 msgstr "Dimensione totale file doc: $TOT_DOC_SIZE MB"
 
-#: ppt2pdf.sh:276
+#: ppt2pdf.sh:336
 #, sh-format
 msgid "Total pdf files size: $TOT_DEST_FILE_SIZE MB"
 msgstr "Dimensione totale file pdf: $TOT_DEST_FILE_SIZE MB"
 
-#: ppt2pdf.sh:278
+#: ppt2pdf.sh:338
 #, sh-format
 msgid "No file ppt or doc found or convert."
 msgstr "Nessun file ppt o doc trovato o convertito."
 
-#: ppt2pdf.sh:283
+#: ppt2pdf.sh:343
 #, sh-format
 msgid "\\nKill OpenOffice deamon...\\n"
 msgstr "\\nUssisione demone OpenOffice...\\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-31 16:39+0100\n"
+"POT-Creation-Date: 2011-01-12 22:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ppt2pdf.sh:47
+#: ppt2pdf.sh:51
 msgid ""
 "\n"
-"Usage: ppt2pdf.sh [options] [filename]\n"
+"Usage: ppt2pdf.sh [options[argument]] [filename]\n"
 "    options: -r: Recursive,\n"
 "    \t     -a: All file in this directory,\n"
+"\t     -o: Overwrite existing destination file,\n"
 "    \t     -y: Answare YES to all question,\n"
 "\t     -v: Verbose (if not use default is 1),\n"
 "\t     -d: Include doc file,\n"
 "\t     -e: Erase original file,\n"
+"\t     -q: Ask before erasing,\n"
+"\t     -j: JPEG quality (provides number 0 - 100, default 90),\n"
 "\t     -h: Usage.\n"
 "    verbose: 0 no output,\n"
 "\t     1 a little bit of info,\n"
@@ -34,119 +37,124 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ppt2pdf.sh:91
+#: ppt2pdf.sh:98
 #, sh-format
 msgid "Conversion of $FILE $DIM..."
 msgstr ""
 
-#: ppt2pdf.sh:99
+#: ppt2pdf.sh:108
 #, sh-format
 msgid "Conversion finished."
 msgstr ""
 
-#: ppt2pdf.sh:101
+#: ppt2pdf.sh:110
 #, sh-format
 msgid "Original file $FILE is $DIM size"
 msgstr ""
 
-#: ppt2pdf.sh:103
+#: ppt2pdf.sh:112
 #, sh-format
 msgid "Converted file $DEST_FILE is $DEST_DIM size"
 msgstr ""
 
-#: ppt2pdf.sh:110
+#: ppt2pdf.sh:120
+#, sh-format
+msgid "Do you want erase $FILE?[y/...]"
+msgstr ""
+
+#: ppt2pdf.sh:132
 #, sh-format
 msgid "Erasing $FILE..."
 msgstr ""
 
-#: ppt2pdf.sh:118
+#: ppt2pdf.sh:141
 #, sh-format
 msgid "No argument passed."
 msgstr ""
 
-#: ppt2pdf.sh:125
+#: ppt2pdf.sh:148
 #, sh-format
 msgid "ERROR: JODConverter not found."
 msgstr ""
 
-#: ppt2pdf.sh:144
+#: ppt2pdf.sh:183 ppt2pdf.sh:189
 #, sh-format
 msgid "Invalid argument '$OPTARG' passed."
 msgstr ""
 
-#: ppt2pdf.sh:147
+#: ppt2pdf.sh:192
 #, sh-format
 msgid "No argument passed to '$OPTARG' option."
 msgstr ""
 
-#: ppt2pdf.sh:150
+#: ppt2pdf.sh:195
 #, sh-format
 msgid "Invalid option '-$OPTARG'."
 msgstr ""
 
-#: ppt2pdf.sh:160
+#: ppt2pdf.sh:205
 msgid "$1 is not a file."
 msgstr ""
 
-#: ppt2pdf.sh:166
+#: ppt2pdf.sh:211
 msgid "\\nStarting OpenOffice as a deamon...\\n"
 msgstr ""
 
-#: ppt2pdf.sh:182
+#: ppt2pdf.sh:237
 #, sh-format
 msgid "Enter in subdirectory: $DIR"
 msgstr ""
 
-#: ppt2pdf.sh:186
+#: ppt2pdf.sh:241
 #, sh-format
 msgid "Exit from subdirectory: $DIR"
 msgstr ""
 
-#: ppt2pdf.sh:209
+#: ppt2pdf.sh:264
 #, sh-format
 msgid "File $DEST_FILE exist: Size is $DEST_FILE_SIZE_HUMAN"
 msgstr ""
 
-#: ppt2pdf.sh:210
+#: ppt2pdf.sh:265
 #, sh-format
 msgid "Original file $FILE: Size is $FILE_SIZE_HUMAN"
 msgstr ""
 
-#: ppt2pdf.sh:219
+#: ppt2pdf.sh:281
 #, sh-format
 msgid "Convert: $FILE in pdf? [y/...]"
 msgstr ""
 
-#: ppt2pdf.sh:236
+#: ppt2pdf.sh:299
 #, sh-format
 msgid "Saved: $SCARTO $UNIT"
 msgstr ""
 
-#: ppt2pdf.sh:257
+#: ppt2pdf.sh:317
 msgid "$1 is not a ppt or doc file."
 msgstr ""
 
-#: ppt2pdf.sh:268
+#: ppt2pdf.sh:328
 #, sh-format
 msgid "Total ppt files size: $TOT_PPT_SIZE MB"
 msgstr ""
 
-#: ppt2pdf.sh:272
+#: ppt2pdf.sh:332
 #, sh-format
 msgid "Total doc files size: $TOT_DOC_SIZE MB"
 msgstr ""
 
-#: ppt2pdf.sh:276
+#: ppt2pdf.sh:336
 #, sh-format
 msgid "Total pdf files size: $TOT_DEST_FILE_SIZE MB"
 msgstr ""
 
-#: ppt2pdf.sh:278
+#: ppt2pdf.sh:338
 #, sh-format
 msgid "No file ppt or doc found or convert."
 msgstr ""
 
-#: ppt2pdf.sh:283
+#: ppt2pdf.sh:343
 #, sh-format
 msgid "\\nKill OpenOffice deamon...\\n"
 msgstr ""

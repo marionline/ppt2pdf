@@ -26,7 +26,6 @@ Usage: ppt2pdf.sh [options] [filename]
 
 TODO
 ====
-* Update pot file and translation
 * Improve inclusion of other type of file supported by OpenOffice.org
 * Add pdf options (example: jpeg compression)
 
